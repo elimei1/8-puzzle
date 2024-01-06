@@ -3,6 +3,9 @@ from PuzzleState import PuzzleState
 from Solver import Solver
 
 
+# Calculate the mean time and mean expanded nodes
+# 100 random states for both heuristics
+# Seperated from the main classes, just for comparison
 class HeuristicEvaluation:
     def __init__(self, states):
         self.states = states
@@ -10,23 +13,23 @@ class HeuristicEvaluation:
     def evaluate(self, heuristic):
         total_time = 0
         total_nodes_expanded = 0
-        run_count = 0
+        run_count = 0   # to see the number of runs in the console
         for state in self.states:
             puzzle_state = PuzzleState(state)
             puzzle_state.is_solvable()
             solver = Solver(puzzle_state, heuristic)
             _, time_taken, nodes_expanded = solver.solve()
             run_count += 1
-            print(run_count, round(time_taken, 4))
+            print(run_count, round(time_taken, 4))  # see run number and time in console
             total_time += time_taken
             total_nodes_expanded += nodes_expanded
-        mean_time = total_time / len(self.states)
-        mean_nodes = total_nodes_expanded / len(self.states)
+        mean_time = total_time / len(self.states)   # calculate mean time
+        mean_nodes = total_nodes_expanded / len(self.states)    # calculate mean expanded nodes
         return mean_time, mean_nodes
 
 
 def run_evaluation():
-    predefined_states = [
+    predefined_states = [   # 100 random states
         [[1, 2, 3], [0, 4, 6], [7, 5, 8]],
         [[1, 2, 3], [7, 4, 0], [6, 5, 8]],
         [[0, 1, 3], [4, 2, 5], [7, 8, 6]],
