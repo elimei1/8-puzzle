@@ -24,17 +24,21 @@ class Solver:
         visited = set()
         num_expanded_nodes = 0
 
-        while self.priority_queue:
-            _, count, current_state = heapq.heappop(self.priority_queue)
-            num_expanded_nodes += 1
-            if current_state.board_finished():
+        while self.priority_queue:  # as long as queue isn't empty
+            _, count, current_state = heapq.heappop(self.priority_queue)    # pop state with the lowest cost
+            num_expanded_nodes += 1     # increase expand count
+            if current_state.board_finished():  # if finished measure time
                 end_time = time()
+                # Return path, time, number of expanded nodes
                 return self.reconstruct_path(current_state), end_time - start_time, num_expanded_nodes
+            # Add current state to visited ones
             visited.add(tuple(map(tuple, current_state.board)))
-            for child in (current_state.create_child()):
-                if tuple(map(tuple, child.board)) not in visited:
-                    count = next(self.counter)
+            for child in (current_state.create_child()):    # all possible child
+                if tuple(map(tuple, child.board)) not in visited:   # if not visited
+                    count = next(self.counter)  # get unique sequence number for new state for queue
+                    # Add child state to open queue with updated cost
                     heapq.heappush(self.priority_queue, (self.heuristic_func(child) + count, count, child))
+        # If no solution is found, also time and expanded nodes
         return None, time() - start_time, num_expanded_nodes
 
     # Reconstruct the path from the initial state to the goal
